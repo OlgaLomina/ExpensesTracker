@@ -1,0 +1,97 @@
+﻿@model ExpensesTracker.Models.Expenses.ExpensesListViewModel
+@{
+    ViewBag.Title = "Expenses";
+}
+
+<h4>Expenses for user: @ViewBag.Message</h4>
+
+<p>
+    @Html.ActionLink("Add a new expense", "Add")
+</p>
+
+
+@*<tr>
+        <td><a href="/Expenses/Add/id">Add a new expense</a></td>
+        <td></td>
+    </tr>
+    <br />
+*@
+
+@using (Html.BeginForm())
+{
+<p>
+    Expenses from @Html.TextBox(Model.DateBegin.ToShortDateString())
+    to @Html.TextBoxFor(x => x.DateEnd, Model.DateEnd.ToShortDateString())
+    <input type="submit" value="Show" class="btn btn-default" />
+</p>
+}
+
+@*<form method="get">
+    <div class="form-inline">
+        <label class="control-label">Expenses from </label>
+        @Html.TextBoxFor(x => x.DateBegin, new { @Value = Model.DateBegin.ToShortDateString() })
+
+        <label class="control-label">to  </label>
+        @Html.TextBoxFor(x => x.DateEnd, new { @Value = Model.DateEnd.ToShortDateString() })
+
+        <input type="submit" value="Show" class="btn btn-default" />
+    </div>
+</form>
+*@
+
+<table>
+    <thead>
+        <tr>
+            <th>Date &nbsp;</th>
+            <th>Description &nbsp;</th>
+            <th>Amount &nbsp;</th>
+            <th>Comment &nbsp;</th>
+            <th>&nbsp;&nbsp;</th>
+            <th>&nbsp;&nbsp;</th>
+
+        </tr>
+    </thead>
+
+    <tbody>
+        @{
+            foreach (var record in Model.Expenses)
+            {
+                <tr>
+                    <td>
+                        @record.Date_Time.ToString("MM/dd/yyyy")&nbsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => record.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => record.Amount)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => record.Comment)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = record.Expense_id }) |
+                        @Html.ActionLink("Delete", "Delete", new { id = record.Expense_id })
+                    </td>
+                </tr>
+
+            }
+        }
+    </tbody>
+</table>
+
+@*<tr>
+
+                    @Html.DisplayFor(modelItem => record.Date_Time.ToShortDateString)
+
+        <td>@record.Date_Time.ToString("hh:mm tt")&nbsp;</td>
+        <td>@record.Name</td>
+        <td>@record.Amount</td>
+        <td>@record.Comment</td>
+        <td>&nbsp;&nbsp;</td>
+        <td><a href="/Expenses/Edit/@record.Expense_id">Edit</a></td>
+        <td>&nbsp;&nbsp;</td>
+        <td><a href="/Expenses/Delete/@record.Expense_id">Delete</a></td>
+
+            to  @Html.TextBoxFor(x => x.DateEnd, new { @Value = @DateTime.Now.ToShortDateString() })
+    </tr>*@

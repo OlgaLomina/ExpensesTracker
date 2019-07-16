@@ -1,0 +1,34 @@
+﻿@{
+    ViewBag.Title = "Admin";
+}
+
+<h2>@ViewBag.Title.</h2>
+
+@if (Model.RoleId == 0)
+{
+
+        <hr />
+
+            <dd>
+                @Html.ActionLink("User List", "UserList")
+
+            </dd>
+            <dd>
+                @Html.ActionLink("Assign Role To User", "AssignRoleToUser")
+
+            </dd>
+            <dd>
+                @Html.ActionLink("Manage Expenses", "ManageExpenses")
+            </dd>
+
+
+}
+else
+{
+    <p>
+        You are not admin.
+    </p>
+}
+
+
+

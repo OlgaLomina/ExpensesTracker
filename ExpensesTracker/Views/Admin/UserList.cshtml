@@ -1,0 +1,40 @@
+﻿@model IEnumerable<ExpensesTracker.Models.UserViewModel>
+@{
+    ViewBag.Title = "UsersList";
+}
+<h3>Users</h3>
+<hr />
+@if (Model != null)
+{
+<table>
+    <thead>
+        <tr>
+            <th>First Name &nbsp;</th>
+            <th>Last Name &nbsp;</th>
+            <th>Email &nbsp;</th>
+            <th>Role &nbsp;</th>
+            <th>Comment &nbsp;</th>
+            <th>&nbsp;&nbsp;</th>
+            <th>&nbsp;&nbsp;</th>
+
+        </tr>
+    </thead>
+
+    <tbody>
+        @{
+            foreach (var record in Model)
+            {
+                <tr>
+                    <td>@record.First_Name &nbsp;</td>
+                    <td>@record.Last_Name &nbsp;</td>
+                    <td>@record.Email &nbsp;</td>
+                    <td>@record.RoleName</td>
+                    <td>@record.Comment</td>
+                    <td>&nbsp;&nbsp;</td>
+                    <td>&nbsp;&nbsp;</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+}
