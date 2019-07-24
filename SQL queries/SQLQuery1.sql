@@ -40,7 +40,7 @@ CREATE TABLE Expenses (
  Userid INT NOT NULL,
  Name VARCHAR (25) NOT NULL,
  Date_time DATETIME,
- Amount DECIMAL, 
+ Amount DECIMAL (18,2), 
  Comment VARCHAR (255),
  FOREIGN KEY (userid) 
         REFERENCES users (Userid)
@@ -72,3 +72,6 @@ VALUES (1, 'Costco', 156.00, '26-mar-2013', 'Food');
 
 ALTER TABLE users 
 ALTER COLUMN  User_password VARCHAR (25) NOT NULL;
+
+ALTER TABLE Expenses 
+ALTER COLUMN   Amount DECIMAL (18,2);

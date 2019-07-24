@@ -30,7 +30,7 @@ namespace ExpensesTracker.BusinessLogic
                     db.SaveChanges();
                 }
             }
-            catch (Exception e)
+            catch //(Exception e)
             {
                 return false;
             }

@@ -228,6 +228,7 @@
     <Content Include="Views\Admin\AssignRoleToUser.cshtml" />
     <Content Include="Views\ManageUser\ManageLoginsUser.cshtml" />
     <Content Include="Views\Admin\UserList.cshtml" />
+    <Content Include="Views\Admin\ManageExpenses.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

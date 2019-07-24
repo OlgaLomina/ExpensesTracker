@@ -3,6 +3,19 @@
     ViewBag.Title = "Expenses";
 }
 
+<style>
+    table.bottomBorder {
+        border-collapse: collapse;
+    }
+
+        table.bottomBorder td,
+        table.bottomBorder th {
+            border-bottom: 1px solid yellowgreen;
+            padding: 3px;
+            text-align: left;
+        }
+</style>
+
 <h4>Expenses for user: @ViewBag.Message</h4>
 
 <p>
@@ -17,72 +30,91 @@
     <br />
 *@
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("Index", "Expenses", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
-<p>
-    Expenses from @Html.TextBox(Model.DateBegin.ToShortDateString())
-    to @Html.TextBoxFor(x => x.DateEnd, Model.DateEnd.ToShortDateString())
-    <input type="submit" value="Show" class="btn btn-default" />
-</p>
+    <p>
+        <span>Start Date :</span> @Html.TextBoxFor(m => m.Dat1)<br />
+        <span>End Date: </span> @Html.TextBoxFor(m => m.Dat2)<br />
+        @*Start Date :<input type="date" name="@Model.DateBegin" />*@
+        <input type="submit" value="Filter" class="btn btn-default" />
+    </p>
 }
-
-@*<form method="get">
-    <div class="form-inline">
-        <label class="control-label">Expenses from </label>
-        @Html.TextBoxFor(x => x.DateBegin, new { @Value = Model.DateBegin.ToShortDateString() })
-
-        <label class="control-label">to  </label>
-        @Html.TextBoxFor(x => x.DateEnd, new { @Value = Model.DateEnd.ToShortDateString() })
-
-        <input type="submit" value="Show" class="btn btn-default" />
-    </div>
-</form>
-*@
-
-<table>
+<table class="bottomBorder">
+    <col width="130">
+    <col width="80">
+    <col width="80">
+    <col width="100">
     <thead>
         <tr>
-            <th>Date &nbsp;</th>
-            <th>Description &nbsp;</th>
-            <th>Amount &nbsp;</th>
-            <th>Comment &nbsp;</th>
-            <th>&nbsp;&nbsp;</th>
-            <th>&nbsp;&nbsp;</th>
+            <th>Date</th>
+            <th>Description</th>
+            <th>Amount</th>
+            <th>Comment</th>
 
         </tr>
     </thead>
 
     <tbody>
         @{
-            foreach (var record in Model.Expenses)
+            foreach (var week in Model.WeekExpenses)
             {
-                <tr>
-                    <td>
-                        @record.Date_Time.ToString("MM/dd/yyyy")&nbsp;
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => record.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => record.Amount)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => record.Comment)
-                    </td>
-                    <td>
-                        @Html.ActionLink("Edit", "Edit", new { id = record.Expense_id }) |
-                        @Html.ActionLink("Delete", "Delete", new { id = record.Expense_id })
-                    </td>
+                foreach (var day in week.AllDayExpenses)
+                {
+                    foreach (var r in day.Expenses)
+                    {
+                        <tr>
+                            <td>
+                                @r.Date_Time.ToString("MM/dd/yyyy")
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => r.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => r.Amount)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => r.Comment)
+                            </td>
+                            <td>
+                                @Html.ActionLink("Edit", "Edit", new { id = r.Expense_id }) |
+                                @Html.ActionLink("Delete", "Delete", new { id = r.Expense_id })
+                            </td>
+                        </tr>
+                    }
+                    <tr style="font-weight:bold" padding: 10px>
+                        <td colspan="2">Average per day:</td>
+                        <td>@day.Avarage_pday</td>
+                        <td></td>
+                    </tr>
+                }
+                <tr style="font-weight:bold">
+                    <td colspan="2">Total sum for @week.Year_Week:</td>
+                    <td>@week.Sum_pweek</td>
                 </tr>
-
             }
         }
     </tbody>
 </table>
 
-@*<tr>
 
-                    @Html.DisplayFor(modelItem => record.Date_Time.ToShortDateString)
+@*@using (Html.BeginForm())
+    {
+        <p>
+            Start Date : <input type="date" name="@ViewBag.dat1" />
+            End Date : <input type="date" name="@ViewBag.dat2" />
+            <input type="submit" value="Filter" class="btn btn-default" />
+        </p>
+    }
+    @using (Html.BeginForm("Index", "Expenses", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            <span>Start Date : </span><input type="date" name="@ViewBag.dat1" />
+            <span>End Date : </span><input type="date" name="@ViewBag.dat2" />
+          }*@
+
+
+
+@*<tr>
+     @Html.DisplayFor(modelItem => record.Date_Time.ToShortDateString)
 
         <td>@record.Date_Time.ToString("hh:mm tt")&nbsp;</td>
         <td>@record.Name</td>

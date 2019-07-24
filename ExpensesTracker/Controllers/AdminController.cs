@@ -80,5 +80,16 @@ namespace ExpensesTracker.Controllers
             }
             return View(model);
         }
+
+        // GET: /Admin/ManageExpenses
+        public ActionResult ManageExpenses()
+        {
+            AssignRoleToUser assign = new AssignRoleToUser();
+            using (UserContext db = new UserContext())
+            {
+                assign.UsersList = db.Users.ToList();
+            }
+            return View(assign);
+        }
     }
 }
