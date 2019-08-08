@@ -1,4 +1,4 @@
-﻿@model ExpensesTracker.Models.AdminModels.AssignRoleToUser
+﻿@model ExpensesTracker.Models.AdminModels.ManageExpensesListViewModel
 @{
     ViewBag.Title = "ManageExpenses";
 }
@@ -12,12 +12,98 @@
         <tr>
             <td>@Html.DisplayNameFor(model => model.UserId)</td>
             <td>@Html.DropDownListFor(model => model.UserId, new SelectList(Model.UsersList, "UserId", "Email"), "-- Select User --")</td>
-        </tr>
-        <tr>
+
             <td></td>
             <td><input type="submit" class="btn btn-default" value="Manage Expenses" /></td>
         </tr>
     </table>
+
+    <style>
+        table.bottomBorder {
+            border-collapse: collapse;
+        }
+
+            table.bottomBorder td,
+            table.bottomBorder th {
+                border-bottom: 1px solid yellowgreen;
+                padding: 3px;
+                text-align: left;
+            }
+    </style>
+
+    <h4>Expenses for user: @ViewBag.Message</h4>
+
+    <p>
+        @Html.ActionLink("Add a new expense", "Add", new { id = Model.UserId, dat1 = Model.Dat1, dat2 = Model.Dat2 })
+    </p>
+
+
+    <p>
+        <span>Start Date :</span> @Html.TextBoxFor(m => m.Dat1)
+        <span>End Date: </span> @Html.TextBoxFor(m => m.Dat2)
+        <input type="submit" value="Filter" class="btn btn-default" />
+    </p>
+
+    <table class="bottomBorder">
+        <col width="130">
+        <col width="80">
+        <col width="80">
+        <col width="100">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Description</th>
+                <th>Amount</th>
+                <th>Comment</th>
+
+            </tr>
+        </thead>
+
+        <tbody>
+            @{
+                foreach (var week in Model.WeekExpenses)
+                {
+                    foreach (var day in week.AllDayExpenses)
+                    {
+                        foreach (var r in day.Expenses)
+                        {
+                            <tr>
+                                <td>
+                                    @r.Date_Time.ToString("MM/dd/yyyy")
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => r.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => r.Amount)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => r.Comment)
+                                </td>
+                                <td>
+                                    @Html.ActionLink("Edit", "Edit", new { id = r.Expense_id, userId = r.Userid, dat1 = Model.Dat1, dat2 = Model.Dat2 }) |
+                                    @Html.ActionLink("Delete", "Delete", new { id = r.Expense_id, userId = r.Userid, dat1 = Model.Dat1, dat2 = Model.Dat2 })
+                                </td>
+                            </tr>
+                        }
+                        <tr style="font-weight:bold" padding: 10px>
+                            <td colspan="2">Average per day:</td>
+                            <td>@day.Avarage_pday</td>
+                            <td></td>
+                        </tr>
+                    }
+                    <tr style="font-weight:bold">
+                        <td colspan="2">Total sum for @week.Year_Week:</td>
+                        <td>@week.Sum_pweek</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+
+    <p>
+        @Html.ActionLink("Back to List", "Index")
+    </p>
 }
 
 @section Scripts {

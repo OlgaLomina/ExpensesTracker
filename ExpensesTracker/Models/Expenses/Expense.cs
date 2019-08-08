@@ -9,7 +9,9 @@ namespace ExpensesTracker.Models
     public class Expense
     {
         [Key] public int Expense_id { get; set; }
-        public int Userid {get; set;} 
+        public int Userid {get; set;}
+
+        [Display(Name = "Description")]
         public string Name { get; set; }
         public DateTime Date_Time { get; set; }
         public decimal Amount { get; set; }

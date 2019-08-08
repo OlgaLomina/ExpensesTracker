@@ -20,6 +20,10 @@ namespace ExpensesTracker.Models.ManageUserModels
             RoleId = user.RoleId;       
         }
 
+        public ManageUser()
+        {
+        }
+
         public string First_Name { get; set; }
         public string Last_Name { get; set; }
         public string Email { get; set; }

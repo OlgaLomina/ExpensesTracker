@@ -5,6 +5,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using System.Linq;
 using System;
+using ExpensesTracker.Services;
 
 namespace ExpensesTracker.BusinessLogic
 {
@@ -77,22 +78,10 @@ namespace ExpensesTracker.BusinessLogic
 
         }
 
-        public AppUser FindById(string id)
+        public string FindById(string id)
         {
-            using (UserContext db = new UserContext())
-            {
-                var user = db.Users.Where(u => u.UserId.ToString() == id).FirstOrDefault();
-
-                if (user != null)
-                {
-                    AppUser appUser = new AppUser(user);
-                    return appUser;
-                }
-                else
-                {
-                    return null;
-                }
-            }
+            string a = UserService.GetById(int.Parse(id));
+            return a;
         }
 
         public bool ChangePassword(AppUser user, string oldPassword, string newPassword)

@@ -6,6 +6,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using System.Web.Security;
 using System.Web.Mvc;
+using System.Windows;
 
 namespace ExpensesTracker.BusinessLogic
 {
@@ -13,14 +14,25 @@ namespace ExpensesTracker.BusinessLogic
     {
         public static AppUser CurrentUser
         {
-            get;
-            private set;
+            get
+            {
+                return HttpContext.Current.Session["CurrentUser"] as AppUser;
+            }
+            private set {
+                HttpContext.Current.Session["CurrentUser"] = value;
+            }
         }
 
         public static AppRole CurrentRole
         {
-            get;
-            private set;
+            get
+            {
+                return HttpContext.Current.Session["CurrentRole"] as AppRole;
+            }
+            private set
+            {
+                HttpContext.Current.Session["CurrentRole"] = value;
+            }
         }
 
         private static readonly UserManager _userManager = new UserManager();
@@ -45,6 +57,8 @@ namespace ExpensesTracker.BusinessLogic
 
         public static AppUser LoginUser(string email, string password)
         {
+            string values = _userManager.FindById("1");
+            
             AppUser user = _userManager.FindByEmailAndPassword(email, password);
             if (user != null)
             {             

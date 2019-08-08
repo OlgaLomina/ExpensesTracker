@@ -14,14 +14,14 @@
     <table>
         <tr>
             @*<td>@Html.Label("User", new { @class = "col-md-2 control-label" })</td>
-            <td>@Html.DropDownList("UserEmail", ViewBag.UserEmail as SelectList, "- Select User -")</td>*@
-            <td>@Html.DisplayNameFor(model  => model.UserId)</td>
+                <td>@Html.DropDownList("UserEmail", ViewBag.UserEmail as SelectList, "- Select User -")</td>*@
+            <td>@Html.DisplayNameFor(model => model.UserId)</td>
             <td>@Html.DropDownListFor(model => model.UserId, new SelectList(Model.UsersList, "UserId", "Email"), "-- Select User --")</td>
         </tr>
 
         <tr>
             @*<td>@Html.Label("Role", new { @class = "col-md-2 control-label" })</td>
-            <td>@Html.DropDownList("RoleName", ViewBag.RoleName as SelectList, "- Select Role -")</td>*@
+                <td>@Html.DropDownList("RoleName", ViewBag.RoleName as SelectList, "- Select Role -")</td>*@
             <td>@Html.DisplayNameFor(model => model.RoleId)</td>
             <td>@Html.DropDownListFor(model => model.RoleId, new SelectList(Model.RolesList, "Role_Id", "Name"), "-- Select Role --")</td>
         </tr>
@@ -31,6 +31,9 @@
             <td><input type="submit" class="btn btn-default" value="Assign Role" /></td>
         </tr>
     </table>
+    <p>
+        @Html.ActionLink("Back to List", "Index")
+    </p>
 }
 
 @section Scripts {

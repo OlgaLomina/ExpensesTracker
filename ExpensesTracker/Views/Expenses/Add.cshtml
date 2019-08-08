@@ -5,37 +5,49 @@
 <!DOCTYPE html>
 
 <html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Add</title>
-</head>
-<body>
-    <div>
-        <h3>Add a new expense</h3>
-        <br />
+@{
+    ViewBag.Title = "Add a new expense";
+}
 
-        <form method="post" action="">
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
 
-            <table>
-                <tbody>
-                    <tr>
-                        <td>Description</td>
-                        <td><input type="text" name="Name" /></td>
-                    </tr>
-                    <tr>
-                        <td>Amount</td>
-                        <td><input type="text" name="Amount" /></td>
-                    </tr>
-                    <tr>
-                        <td>Comment</td>
-                        <td><input type="text" name="Comment" /></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2"><input type="submit" value="Save" /></td>
-                    </tr>
-                </tbody>
-            </table>
-        </form>
-    </div>
-</body>
+    <head>
+        <meta name="viewport" content="width=device-width" />
+        <title>Add</title>
+    </head>
+    <body>
+        <div>
+            <h3>Add a new expense</h3>
+            <br />
+
+            <form method="post" action="">
+
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>Description</td>
+                            <td><input type="text" name="Name" /></td>
+                        </tr>
+                        <tr>
+                            <td>Amount</td>
+                            <td><input type="text" name="Amount" /></td>
+                        </tr>
+                        <tr>
+                            <td>Comment</td>
+                            <td><input type="text" name="Comment" /></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><input type="submit" value="Save" /></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </form>
+        </div>
+        <p>
+            @Html.ActionLink("Back to List", "Index")
+        </p>
+    </body>
+}
 </html>

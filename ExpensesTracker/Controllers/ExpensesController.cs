@@ -4,8 +4,10 @@ using ExpensesTracker.Models.Expenses;
 using ExpensesTracker.Models.ManageUserModels;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
 
@@ -15,14 +17,13 @@ namespace ExpensesTracker.Controllers
     {
 
         //for access to DB
-        readonly ExpenseContext db = new ExpenseContext();
+        ExpenseContext db = new ExpenseContext();
 
         private readonly ManageUser _currentUser = new ManageUser(UserSignInManager.CurrentUser);
 
         // GET: Expenses
         public ActionResult Index()
         {
-            ExpenseContext db = new ExpenseContext();
             int userid = Int32.Parse(_currentUser.id);
                        
             ExpensesListViewModel ex_lvm = new ExpensesListViewModel();
@@ -33,7 +34,7 @@ namespace ExpensesTracker.Controllers
             {
                 dates.Add(a.Key.Date);
             }
-            dates.Distinct();
+            dates = dates.Distinct().ToList();
 
             foreach (var r in dates)
             {
@@ -42,7 +43,7 @@ namespace ExpensesTracker.Controllers
                 {
                     Expenses = db.Expenses.Where(e => e.Userid == userid && e.Date_Time >= r && e.Date_Time <= r1)
                 };
-                ex_avg.Avarage_pday = ex_avg.Expenses.Average(e => e.Amount);
+                ex_avg.Avarage_pday = Math.Round(ex_avg.Expenses.Average(e => e.Amount), 2);
                 //var aa = ex_avg.Expenses.ToList();
 
                 ExpensesWeekViewModel ex_week = new ExpensesWeekViewModel();
@@ -60,7 +61,6 @@ namespace ExpensesTracker.Controllers
         {
             DateTime dtFrom = Convert.ToDateTime(dat1);
             DateTime dtTo = Convert.ToDateTime(dat2);
-            ExpenseContext db = new ExpenseContext();
             int userid = Int32.Parse(_currentUser.id);
 
             ExpensesListViewModel ex_lvm = new ExpensesListViewModel();
@@ -69,9 +69,9 @@ namespace ExpensesTracker.Controllers
             List<DateTime> dates = new List<DateTime>();
             foreach (var a in expenses)
             {
-                dates.Add(a.Key);
+                dates.Add(a.Key.Date);
             }
-            dates.Distinct();
+            dates = dates.Distinct().ToList();
 
             foreach (var r in dates)
             {
@@ -80,7 +80,7 @@ namespace ExpensesTracker.Controllers
                 {
                     Expenses = db.Expenses.Where(e => e.Userid == userid && e.Date_Time >= r && e.Date_Time <= r1)
                 };
-                ex_avg.Avarage_pday = ex_avg.Expenses.Average(e => e.Amount);
+                ex_avg.Avarage_pday = Math.Round(ex_avg.Expenses.Average(e => e.Amount), 2);
 
                 ExpensesWeekViewModel ex_week = new ExpensesWeekViewModel();
                 ex_week.AllDayExpenses.Add(ex_avg);
@@ -88,26 +88,45 @@ namespace ExpensesTracker.Controllers
                 ex_week.Sum_pweek = ex_avg.Expenses.Sum(e => e.Amount);
                 ex_lvm.WeekExpenses.Add(ex_week);
             }
+            ViewBag.Message = _currentUser.First_Name + " " + _currentUser.Last_Name + "( " + _currentUser.Email + " )";
             return View(ex_lvm);
         }
 
         [HttpGet]
-        public ActionResult Edit(int id)
+        public ActionResult Edit(int? id)
         {
-            var expenses = db.Expenses.Where(e => e.Expense_id == id).FirstOrDefault();
-            ViewBag.ExpensesId = expenses.Expense_id;
-            ViewBag.Name = expenses.Name;
-
-            return View();
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Expense expense = db.Expenses.Find(id);
+            if (expense == null)
+            {
+                return HttpNotFound();
+            }
+            return View(expense);
         }
 
         [HttpPost]
-        public string Edit(Expense expense)
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(Expense expense)
         {
-            expense.Date_Time = DateTime.Now;
-            //db.Expenses.Add(expense);
-            db.SaveChanges();
-            return $"the expense was added.";
+            var id = expense.Expense_id;
+            var expenseToUpdate = db.Expenses.Find(id);
+            if (TryUpdateModel(expenseToUpdate, "", new string[] { "Name", "Amount", "Comment" }))
+            {
+                try
+                {
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                catch (Exception e)
+                {
+                    //Log the error (uncomment dex variable name and add a line here to write a log.
+                    ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, see your system administrator.");
+                }
+            }
+            return View(expense);
         }
 
         [HttpGet]
@@ -117,31 +136,68 @@ namespace ExpensesTracker.Controllers
         }
 
         [HttpPost]
-        public string Add(Expense expense)
+        [ValidateAntiForgeryToken]
+        public ActionResult Add(Expense model)
         {
-            expense.Date_Time = DateTime.Now;
-            expense.Userid = Int32.Parse(_currentUser.id);
-            db.Expenses.Add(expense);
-            db.SaveChanges();
-            return $"the expense was added.";
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    model.Date_Time = DateTime.Now;
+                    model.Userid = Int32.Parse(_currentUser.id);
+                    db.Expenses.Add(model);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+            }
+            catch (Exception e)
+            {
+                //Log the error (uncomment dex variable name and add a line here to write a log.
+                ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
+            }
+            return View(model);
         }
+
 
         [HttpGet]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(int id, bool? saveChangesError = false)
         {
             ViewBag.expensesid = id;
-            return View();
-        }
 
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            if (saveChangesError.GetValueOrDefault())
+            {
+                ViewBag.ErrorMessage = "Delete failed. Try again, and if the problem persists see your system administrator.";
+            }
+            Expense expense = db.Expenses.Find(id);
+            if (expense == null)
+            {
+                return HttpNotFound();
+            }
+            return View(expense);
+        }
+        
         [HttpPost]
-        public string Delete(Expense expense)
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(int id)
         {
-            db.Expenses.Remove(expense);
-            db.SaveChanges();
-            return $"the expense was deleted.";
+            Expense expense = db.Expenses.Find(id);
+            try
+            {
+                db.Expenses.Remove(expense);
+                db.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                //Log the error (uncomment dex variable name and add a line here to write a log.
+                return RedirectToAction("Delete", new { id = expense.Expense_id, saveChangesError = true });
+            }
+            return RedirectToAction("Index");
         }
-
-
+        
         public static string GetYearWeek(DateTime dat)
         {
             CultureInfo myCI = new CultureInfo("en-US");

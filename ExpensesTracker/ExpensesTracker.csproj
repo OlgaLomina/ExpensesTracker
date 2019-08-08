@@ -155,9 +155,11 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="BusinessLogic\AppRoleManager.cs" />
     <Compile Include="BusinessLogic\AppUser.cs" />
+    <Compile Include="Class1.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="BusinessLogic\UserManager.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ExpensesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageUserController.cs" />
@@ -166,6 +168,7 @@
     </Compile>
     <Compile Include="Models\AdminModels\AdminUser.cs" />
     <Compile Include="Models\AdminModels\AssignRoleToUser.cs" />
+    <Compile Include="Models\AdminModels\ManageExpensesListViewModel.cs" />
     <Compile Include="Models\Expenses\ExpensesListViewModel.cs" />
     <Compile Include="Models\ManageUserModels\ChangePasswordUser.cs" />
     <Compile Include="Models\Expenses\Expense.cs" />
@@ -179,6 +182,7 @@
     <Compile Include="Models\UserContext.cs" />
     <Compile Include="BusinessLogic\UserSignInManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\UserService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-theme.css" />
@@ -229,10 +233,14 @@
     <Content Include="Views\ManageUser\ManageLoginsUser.cshtml" />
     <Content Include="Views\Admin\UserList.cshtml" />
     <Content Include="Views\Admin\ManageExpenses.cshtml" />
+    <Content Include="Views\Admin\Add.cshtml" />
+    <Content Include="Views\Admin\Edit.cshtml" />
+    <Content Include="Views\Admin\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="MyCode\" />
+    <Folder Include="Views\Base\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
@@ -246,6 +254,9 @@
     <None Include="packages.config" />
     <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.3.1.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

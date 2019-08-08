@@ -1,0 +1,49 @@
+﻿@{
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+@{
+    ViewBag.Title = "Add a new expense";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <body>
+        <div>
+            <h3>@ViewBag.Message</h3>
+            <br />
+
+            <form method="post" action="">
+
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>Description</td>
+                            <td><input type="text" name="Name" /></td>
+                        </tr>
+                        <tr>
+                            <td>Amount</td>
+                            <td><input type="text" name="Amount" /></td>
+                        </tr>
+                        <tr>
+                            <td>Comment</td>
+                            <td><input type="text" name="Comment" /></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><input type="submit" value="Save" /></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </form>
+        </div>
+        <p>
+            @Html.ActionLink("Back to List", "ManageExpenses", new { id = Model.UserId, dat1 = Model.Dat1, dat2 = Model.Dat2 })
+        </p>
+    </body>
+}
+</html>
